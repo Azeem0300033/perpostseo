@@ -35,12 +35,11 @@ class ImagesTextJob implements ShouldQueue
     public function handle(): void
     {
         $allImagesPath = $this->allImagesPath;
-        $allText = '';
-        foreach ($allImagesPath as $image) {
-            $text = $this->convertImageToText($image);
-            Log::info('Processed array: ' . $text);
-            break;
-        }
+        $text = $this->convertImageToText($allImagesPath);
+        Log::info($text);
+//        foreach ($allImagesPath as $image) {
+//            $text = $this->convertImageToText($image);
+//        }
     }
 
     private function convertImageToText($imagePath): string
@@ -52,6 +51,10 @@ class ImagesTextJob implements ShouldQueue
         $ocr = new TesseractOCR($tempImage);
         $text = $ocr->run();
 
+//        write $text to converted_images.txt file in public folder
+        $convertedImages = fopen(public_path('converted_images.txt'), 'a');
+        fwrite($convertedImages, $text);
+        fclose($convertedImages);
         return $text;
     }
 }

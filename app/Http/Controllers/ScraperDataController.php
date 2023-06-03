@@ -113,12 +113,9 @@ class ScraperDataController extends Controller
         $allImagesPath = [];
         foreach ($images as $image) {
             $image_path = $image->getPathname();
-            $allImagesPath[] = $image_path;
+            $imageJob = new ImagesTextJob($image_path);
+            dispatch($imageJob);
         }
-
-        $imageJob = new ImagesTextJob($allImagesPath);
-//        $imageJob->handle();
-        dispatch($imageJob);
         return 'Images converted to text and written to converted_images.txt';
 
     }
